@@ -88,6 +88,13 @@ pub struct HelmChartSpec {
     #[serde(default, skip_serializing_if = "Option::is_none", rename = "jobImage")]
     #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
     pub job_image: Option<String>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "podSecurityContext"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub pod_security_context: Option<HelmChartPodSecurityContext>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
     pub repo: Option<String>,
@@ -101,6 +108,13 @@ pub struct HelmChartSpec {
     )]
     #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
     pub repo_ca_config_map: Option<HelmChartRepoCaConfigMap>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "securityContext"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub security_context: Option<HelmChartSecurityContext>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
     pub set: Option<BTreeMap<String, IntOrString>>,
@@ -147,10 +161,301 @@ pub struct HelmChartDockerRegistrySecret {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
 #[cfg_attr(feature = "builder", derive(TypedBuilder))]
 #[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartPodSecurityContext {
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "fsGroup")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub fs_group: Option<i64>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "fsGroupChangePolicy"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub fs_group_change_policy: Option<String>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "runAsGroup"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub run_as_group: Option<i64>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "runAsNonRoot"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub run_as_non_root: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "runAsUser")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub run_as_user: Option<i64>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "seLinuxOptions"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub se_linux_options: Option<HelmChartPodSecurityContextSeLinuxOptions>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "seccompProfile"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub seccomp_profile: Option<HelmChartPodSecurityContextSeccompProfile>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "supplementalGroups"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub supplemental_groups: Option<Vec<i64>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub sysctls: Option<Vec<HelmChartPodSecurityContextSysctls>>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "windowsOptions"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub windows_options: Option<HelmChartPodSecurityContextWindowsOptions>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartPodSecurityContextSeLinuxOptions {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub level: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub role: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "type")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub r#type: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub user: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartPodSecurityContextSeccompProfile {
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "localhostProfile"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub localhost_profile: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "type")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub r#type: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartPodSecurityContextSysctls {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub name: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub value: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartPodSecurityContextWindowsOptions {
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "gmsaCredentialSpec"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub gmsa_credential_spec: Option<String>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "gmsaCredentialSpecName"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub gmsa_credential_spec_name: Option<String>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "hostProcess"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub host_process: Option<bool>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "runAsUserName"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub run_as_user_name: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
 pub struct HelmChartRepoCaConfigMap {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
     pub name: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartSecurityContext {
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "allowPrivilegeEscalation"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub allow_privilege_escalation: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub capabilities: Option<HelmChartSecurityContextCapabilities>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub privileged: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "procMount")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub proc_mount: Option<String>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "readOnlyRootFilesystem"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub read_only_root_filesystem: Option<bool>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "runAsGroup"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub run_as_group: Option<i64>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "runAsNonRoot"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub run_as_non_root: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "runAsUser")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub run_as_user: Option<i64>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "seLinuxOptions"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub se_linux_options: Option<HelmChartSecurityContextSeLinuxOptions>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "seccompProfile"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub seccomp_profile: Option<HelmChartSecurityContextSeccompProfile>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "windowsOptions"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub windows_options: Option<HelmChartSecurityContextWindowsOptions>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartSecurityContextCapabilities {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub add: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub drop: Option<Vec<String>>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartSecurityContextSeLinuxOptions {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub level: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub role: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "type")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub r#type: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub user: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartSecurityContextSeccompProfile {
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "localhostProfile"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub localhost_profile: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none", rename = "type")]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub r#type: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]
+#[cfg_attr(feature = "builder", derive(TypedBuilder))]
+#[cfg_attr(feature = "schemars", derive(JsonSchema))]
+pub struct HelmChartSecurityContextWindowsOptions {
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "gmsaCredentialSpec"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub gmsa_credential_spec: Option<String>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "gmsaCredentialSpecName"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub gmsa_credential_spec_name: Option<String>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "hostProcess"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub host_process: Option<bool>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        rename = "runAsUserName"
+    )]
+    #[cfg_attr(feature = "builder", builder(default, setter(strip_option)))]
+    pub run_as_user_name: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Default)]

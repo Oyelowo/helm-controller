@@ -18,7 +18,7 @@ rust_lib = """//! Kubernetes CRDs for helm-controller
 
 crds = yaml.safe_load_all(
     requests.get(
-        "https://github.com/k3s-io/helm-controller/releases/download/v0.15.5/deploy-cluster-scoped.yaml"
+        "https://github.com/k3s-io/helm-controller/releases/download/v0.16.0/deploy-cluster-scoped.yaml"
     ).text
 )
 for crd in crds:
